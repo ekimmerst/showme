@@ -2,7 +2,7 @@
 
 - Communicate with the user in German. Addon messages, comments, metadata, and documentation are in English, matching HideMe.
 - Read ShowMe.lua, ShowMe.toc and README.md before editing.
-- Standalone WoW Forever Beta addon; interface 16001 copied from the installed HideMe metadata. Version 0.2.1.
+- Standalone WoW Forever Beta addon; interface 16001 copied from the installed HideMe metadata. Version 0.2.2.
 - Work only within ShowMe for ShowMe requests. Other addons are separate projects.
 - No external dependencies or build step. Git repository uses main. GitHub publication is requested; intended repository: https://github.com/ekimmerst/showme. Check actual remote and publication state before relying on this URL.
 - Slash command: /showme nameplate-quest-icon on|off; /showme help; /showme status. On enables the icon; default off. SavedVariablesPerCharacter: ShowMeDB.nameplateQuestIcon.
@@ -15,3 +15,10 @@
 - Version 0.2.1 passed the extended Lua 5.1 simulation in TEMP/showme-progress-test.py using TEMP/showme-lua-runtime. The original showme-state-test.py remains an older harness. Tests cover off/on without frame unit-token fields, left/right counters, updates/completion, multiple counters, badge placement, restricted fallback, recycling and font failure/recovery. Real rendering and engine secret-value behavior remain unverified.
 - The user confirmed on October 11, 2026 that the corrected progress display and off/on behavior work in game in version 0.2.1. Detailed compatibility checks remain pending, especially restricted data, completion updates, combat overlays, custom plate layouts and interaction with ForeverQuestMark.
 - Update version and README for functional releases; change interface only with client evidence.
+
+## Addon list artwork
+
+- Version 0.2.2 adds an open-eye icon matching HideMe's golden frame, violet glow and hand-painted WoW style. No Lua behavior changes.
+- Media/Icon.png is the original image generated with the built-in image_gen tool using HideMe's icon as a reference.
+- Media/Icon.tga is the 256x256 uncompressed 32-bit BGRA texture with top-left origin. ShowMe.toc references Interface\AddOns\ShowMe\Media\Icon through IconTexture.
+- Keep Media when installing. Native addon-list rendering requires in-game verification; restart the client after adding the texture if needed.

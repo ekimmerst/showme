@@ -1,10 +1,10 @@
 # ShowMe
 
-Small standalone chat-controlled addon for the WoW Forever Beta, matching HideMe's command style. Version 0.2.1; interface 16001, matching the installed HideMe addon.
+Small standalone chat-controlled addon for the WoW Forever Beta, matching HideMe's command style. Version 0.2.2; interface 16001, matching the installed HideMe addon.
 
 ## Installation
 
-Keep the ShowMe folder in Interface/AddOns and enable ShowMe in the character selection AddOns menu. Restart the client if ShowMe was installed while the game was running. No other addons are required.
+Keep the ShowMe folder in Interface/AddOns and enable ShowMe in the character selection AddOns menu. Restart the client if ShowMe was installed while the game was running. No other addons are required. Keep the included Media folder; it contains the open-eye addon-list icon matching HideMe. Restart WoW after adding the new texture if /reload does not display it.
 
 ## Commands
 
