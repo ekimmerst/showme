@@ -2,6 +2,7 @@ local addonName = ...
 local events = CreateFrame("Frame")
 local activePlates, icons = {}, {}
 local elapsed = 0
+local settingKeys = { "nameplateQuestIcon" }
 
 local function Print(message)
     DEFAULT_CHAT_FRAME:AddMessage("|cff66ccffShowMe:|r " .. message)
@@ -189,7 +190,8 @@ local function DiscoverPlates()
 end
 
 local function PrintHelp()
-    Print("Available commands (on: enable icons, off: disable icons):")
+    Print("Available commands (on: enable, off: disable):")
+    Print("/showme all on|off - Enable or disable all ShowMe settings.")
     Print("/showme nameplate-quest-icon on - Show quest icons on the left and objective progress on the right.")
     Print("/showme nameplate-quest-icon off - Hide ShowMe's quest icons and progress.")
     Print("/showme status - Show the saved setting.")
@@ -252,11 +254,16 @@ SlashCmdList.SHOWME = function(message)
         return
     end
     local name, mode = message:match("^(%S+)%s+(%S+)$")
-    if name ~= "nameplate-quest-icon" or (mode ~= "on" and mode ~= "off") then
+    if (name ~= "nameplate-quest-icon" and name ~= "all") or (mode ~= "on" and mode ~= "off") then
         Print("Invalid command. For usage and available parameters, type /showme help")
         return
     end
-    ShowMeDB.nameplateQuestIcon = mode == "on"
+    if name == "all" then
+        for _, key in ipairs(settingKeys) do ShowMeDB[key] = mode == "on" end
+    else
+        ShowMeDB.nameplateQuestIcon = mode == "on"
+    end
     DiscoverPlates()
-    Print("Quest mob nameplate icons are " .. (mode == "on" and "enabled." or "disabled."))
+    local subject = name == "all" and "All ShowMe settings are " or "Quest mob nameplate icons are "
+    Print(subject .. (mode == "on" and "enabled." or "disabled."))
 end

@@ -1,6 +1,6 @@
 # ShowMe
 
-Small standalone chat-controlled addon for the WoW Forever Beta, matching HideMe's command style. Version 0.2.2; interface 16001, matching the installed HideMe addon.
+Small standalone chat-controlled addon for the WoW Forever Beta, matching HideMe's command style. Version 0.2.3; interface 16001, matching the installed HideMe addon.
 
 ## Installation
 
@@ -8,12 +8,16 @@ Keep the ShowMe folder in Interface/AddOns and enable ShowMe in the character se
 
 ## Commands
 
+- /showme all on: enable all currently implemented ShowMe settings.
+- /showme all off: disable all currently implemented ShowMe settings.
 - /showme nameplate-quest-icon on: show a yellow quest exclamation mark to the left of nameplates and objective progress (for example, 3/10) to the right for mobs related to unfinished active quest objectives, including kill and quest-item objectives.
 - /showme nameplate-quest-icon off: remove ShowMe's icons and progress text.
 - /showme status: display the saved on/off setting.
 - /showme help, or /showme without arguments: display usage.
 
 Commands are case-insensitive and ignore surrounding whitespace. Invalid commands leave the setting unchanged. Icons are disabled by default. Settings are saved per character in ShowMeDB and persist across /reload and restarts. Changes apply immediately, including during combat, because ShowMe controls only its own unprotected overlays.
+
+Currently, nameplate-quest-icon is the only setting, so all controls both its quest icons and progress text. Version 0.2.3 adds the all command.
 
 Enemy nameplates must be visible (normally toggled with V). ShowMe does not enable nameplates automatically.
 
