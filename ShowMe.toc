@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: ShowMe
+## Notes: Shows quest objective icons on nameplates using chat commands.
+## Author: ShowMe
+## Version: 0.1.0
+## SavedVariablesPerCharacter: ShowMeDB
+
+ShowMe.lua
