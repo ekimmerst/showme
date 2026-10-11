@@ -1,6 +1,6 @@
 # ShowMe
 
-Small standalone chat-controlled addon for the WoW Forever Beta, matching HideMe's command style. Version 0.2.3; interface 16001, matching the installed HideMe addon.
+Small standalone chat-controlled addon for the WoW Forever Beta, matching HideMe's command style. Version 0.2.4; interface 16001, matching the installed HideMe addon.
 
 ## Installation
 
@@ -19,7 +19,7 @@ Commands are case-insensitive and ignore surrounding whitespace. Invalid command
 
 Currently, nameplate-quest-icon is the only setting, so all controls both its quest icons and progress text. Version 0.2.3 adds the all command.
 
-Enemy nameplates must be visible (normally toggled with V). ShowMe does not enable nameplates automatically.
+The mob's nameplate must be visible, including friendly nameplates for friendly mobs (normally toggled with Shift+V). ShowMe does not enable nameplates automatically.
 
 ## Behavior and compatibility
 
@@ -29,11 +29,13 @@ Progress text uses a separate overlay six pixels right of the health-bar area, o
 
 Discovery also resolves nameplate1 through nameplate40 directly through C_NamePlate.GetNamePlateForUnit, so switching off/on does not depend solely on namePlateUnitToken fields being present on plate frames.
 
-C_QuestLog.UnitIsRelatedToActiveQuest provides the fallback when tooltip data is missing, lacks counters, or is restricted. Restricted booleans are passed directly to SetShown; if the client rejects that operation, the icon stays hidden. ShowMe does not guess quest mobs from names. In restricted situations, the relation API determines eligibility and objective-level completion may not be available.
+C_QuestLog.UnitIsRelatedToActiveQuest provides the fallback when tooltip data is missing, lacks counters, or is restricted. Version 0.2.4 also accepts a readable unfinished tooltip objective on an NPC that UnitCanAttack confirms is attackable, even when the relation API returns false. This supports friendly or neutral attackable quest mobs without relying on their reaction or name. Missing, restricted or failed attackability checks do not override a false relation. Restricted booleans are passed directly to SetShown; if the client rejects that operation, the icon stays hidden. ShowMe does not guess quest mobs from names. In restricted situations, the relation API determines eligibility and objective-level completion may not be available.
 
 Custom nameplate addons may require anchor adjustments. Other quest-icon addons, such as ForeverQuestMark, can display additional icons independently; disable their icon feature if duplicate marks are unwanted.
 
 ## Verification
+
+Version 0.2.4 passed the existing Lua 5.1 regression simulation plus false-relation attackable NPC cases: counters and updates, all off/on, completion, non-attackable and restricted/error flags, unavailable/restricted tooltip data, dead NPCs and removal. The user confirmed on October 11, 2026 that the fix works in game for friendly attackable quest mobs.
 
 Version 0.2.1 passed a Lua 5.1 simulation using a temporary Lupa runtime: defaults, commands, localized counters, completion, restricted-data fallbacks, polling, removal/recycling, world/combat events, missing plate tokens, repeated off/on, both tooltip columns, multiple counters, level-badge placement, and text-creation failure/recovery. The user confirmed on October 11, 2026 that the corrected progress display and off/on behavior work in game. Detailed compatibility checks remain pending; the mocks do not reproduce the client's rendering or secret-value enforcement.
 

@@ -147,8 +147,14 @@ local function UpdatePlate(unit, plate)
     if deadOK and not IsSecret(dead) and dead then return end
 
     local related = QuestRelation(unit)
-    if not IsSecret(related) and related == false then return end
     local tooltipOK, objective, progress = pcall(TooltipQuestObjective, unit)
+    if not IsSecret(related) and related == false then
+        -- Attackable NPCs can have objective counters despite a false relation.
+        -- Require explicit unfinished tooltip evidence before overriding it.
+        if not tooltipOK or objective ~= true then return end
+        local attackOK, attackable = pcall(UnitCanAttack, "player", unit)
+        if not attackOK or IsSecret(attackable) or attackable ~= true then return end
+    end
     if tooltipOK and objective ~= nil then
         icon:SetShown(objective)
         if objective then
