@@ -2,17 +2,6 @@ local addonName = ...
 local events = CreateFrame("Frame")
 local activePlates, icons = {}, {}
 local elapsed = 0
-local settingKeys = { "nameplateQuestIcon" }
-
-local function Print(message)
-    DEFAULT_CHAT_FRAME:AddMessage("|cff66ccffShowMe:|r " .. message)
-end
-
-local function InitializeSettings()
-    if type(ShowMeDB) ~= "table" then ShowMeDB = {} end
-    ShowMeDB.nameplateQuestIcon = ShowMeDB.nameplateQuestIcon == true
-end
-
 local function IsSecret(value)
     return issecretvalue and issecretvalue(value)
 end
@@ -134,12 +123,7 @@ local function GetIcon(plate)
 end
 
 local function UpdatePlate(unit, plate)
-    local icon = icons[plate]
-    if not (ShowMeDB and ShowMeDB.nameplateQuestIcon) then
-        if icon then HideOverlay(icon) end
-        return
-    end
-    icon = GetIcon(plate)
+    local icon = GetIcon(plate)
     HideOverlay(icon)
     local ok, isPlayer = pcall(UnitIsPlayer, unit)
     if not ok or IsSecret(isPlayer) or isPlayer then return end
@@ -184,7 +168,7 @@ local function DiscoverPlates()
         end
     end
     -- Some client/layout combinations omit namePlateUnitToken on plate frames.
-    -- Resolve the engine's unit tokens directly, including after off/on.
+    -- Resolve the engine's unit tokens directly when discovering existing plates.
     if C_NamePlate and C_NamePlate.GetNamePlateForUnit then
         for i = 1, 40 do
             local unit = "nameplate" .. i
@@ -195,15 +179,6 @@ local function DiscoverPlates()
     UpdateAll()
 end
 
-local function PrintHelp()
-    Print("Available commands (on: enable, off: disable):")
-    Print("/showme all on|off - Enable or disable all ShowMe settings.")
-    Print("/showme nameplate-quest-icon on - Show quest icons on the left and objective progress on the right.")
-    Print("/showme nameplate-quest-icon off - Hide ShowMe's quest icons and progress.")
-    Print("/showme status - Show the saved setting.")
-    Print("/showme help - Show this help.")
-end
-
 for _, event in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "PLAYER_ENTERING_WORLD",
     "NAME_PLATE_UNIT_ADDED", "NAME_PLATE_UNIT_REMOVED", "QUEST_LOG_UPDATE",
     "UNIT_QUEST_LOG_CHANGED", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED" }) do
@@ -212,11 +187,10 @@ end
 
 events:SetScript("OnEvent", function(_, event, unit)
     if event == "ADDON_LOADED" then
-        if unit == addonName then InitializeSettings() end
+        if unit == addonName then DiscoverPlates() end
         return
     end
     if event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" then
-        InitializeSettings()
         DiscoverPlates()
     elseif event == "NAME_PLATE_UNIT_ADDED" then
         local plate = C_NamePlate and C_NamePlate.GetNamePlateForUnit(unit)
@@ -236,9 +210,9 @@ events:SetScript("OnEvent", function(_, event, unit)
 end)
 
 -- Retry delayed tooltip data and keep anchors current when plate layouts change.
--- Only visible plates are inspected, and only while the feature is enabled.
+-- Only visible tracked plates are inspected.
 events:SetScript("OnUpdate", function(_, delta)
-    if not (ShowMeDB and ShowMeDB.nameplateQuestIcon) or not next(activePlates) then
+    if not next(activePlates) then
         elapsed = 0
         return
     end
@@ -248,28 +222,3 @@ events:SetScript("OnUpdate", function(_, delta)
         UpdateAll()
     end
 end)
-
-SLASH_SHOWME1 = "/showme"
-SlashCmdList.SHOWME = function(message)
-    message = message:lower():match("^%s*(.-)%s*$")
-    if message == "help" or message == "" then PrintHelp(); return end
-    InitializeSettings()
-    if message == "status" then
-        Print("nameplate-quest-icon - Quest mob icons: "
-            .. (ShowMeDB.nameplateQuestIcon and "on" or "off"))
-        return
-    end
-    local name, mode = message:match("^(%S+)%s+(%S+)$")
-    if (name ~= "nameplate-quest-icon" and name ~= "all") or (mode ~= "on" and mode ~= "off") then
-        Print("Invalid command. For usage and available parameters, type /showme help")
-        return
-    end
-    if name == "all" then
-        for _, key in ipairs(settingKeys) do ShowMeDB[key] = mode == "on" end
-    else
-        ShowMeDB.nameplateQuestIcon = mode == "on"
-    end
-    DiscoverPlates()
-    local subject = name == "all" and "All ShowMe settings are " or "Quest mob nameplate icons are "
-    Print(subject .. (mode == "on" and "enabled." or "disabled."))
-end

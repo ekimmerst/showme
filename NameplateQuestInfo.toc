@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: NameplateQuestInfo
+## IconTexture: Interface\AddOns\NameplateQuestInfo\Media\Icon
+## Notes: Shows quest objective icons and progress on nameplates automatically.
+## Author: NameplateQuestInfo
+## Version: 0.2.7
+
+NameplateQuestInfo.lua

@@ -1,9 +1,0 @@
-## Interface: 16001
-## Title: ShowMe
-## IconTexture: Interface\AddOns\ShowMe\Media\Icon
-## Notes: Shows quest objective icons and progress on nameplates using chat commands.
-## Author: ShowMe
-## Version: 0.2.4
-## SavedVariablesPerCharacter: ShowMeDB
-
-ShowMe.lua
