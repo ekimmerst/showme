@@ -1,42 +1,24 @@
 # ShowMe
 
-Small standalone chat-controlled addon for the WoW Forever Beta, matching HideMe's command style. Version 0.2.4; interface 16001, matching the installed HideMe addon.
+ShowMe helps you spot quest mobs in WoW Forever Beta. It adds a yellow quest marker beside their nameplates and shows your objective progress, such as **3/10**, for kill and quest-item objectives.
 
-## Installation
+## Getting started
 
-Keep the ShowMe folder in Interface/AddOns and enable ShowMe in the character selection AddOns menu. Restart the client if ShowMe was installed while the game was running. No other addons are required. Keep the included Media folder; it contains the open-eye addon-list icon matching HideMe. Restart WoW after adding the new texture if /reload does not display it.
+Install ShowMe in your `Interface/AddOns` folder and enable it in the AddOns menu. In game, type `/showme all on` to turn it on.
+
+Quest markers and progress are disabled by default. Your preferences are saved separately for each character, and changes take effect immediately.
+
+Nameplates must be visible for ShowMe to display markers. Enable friendly nameplates when looking for friendly quest mobs.
 
 ## Commands
 
-- /showme all on: enable all currently implemented ShowMe settings.
-- /showme all off: disable all currently implemented ShowMe settings.
-- /showme nameplate-quest-icon on: show a yellow quest exclamation mark to the left of nameplates and objective progress (for example, 3/10) to the right for mobs related to unfinished active quest objectives, including kill and quest-item objectives.
-- /showme nameplate-quest-icon off: remove ShowMe's icons and progress text.
-- /showme status: display the saved on/off setting.
-- /showme help, or /showme without arguments: display usage.
+| Command | Action |
+| --- | --- |
+| `/showme all on` | Enable all ShowMe features. |
+| `/showme all off` | Disable all ShowMe features. |
+| `/showme nameplate-quest-icon on` | Show quest markers and objective progress. |
+| `/showme nameplate-quest-icon off` | Hide quest markers and objective progress. |
+| `/showme status` | Show your current settings. |
+| `/showme help` | Show the available commands. |
 
-Commands are case-insensitive and ignore surrounding whitespace. Invalid commands leave the setting unchanged. Icons are disabled by default. Settings are saved per character in ShowMeDB and persist across /reload and restarts. Changes apply immediately, including during combat, because ShowMe controls only its own unprotected overlays.
-
-Currently, nameplate-quest-icon is the only setting, so all controls both its quest icons and progress text. Version 0.2.3 adds the all command.
-
-The mob's nameplate must be visible, including friendly nameplates for friendly mobs (normally toggled with Shift+V). ShowMe does not enable nameplates automatically.
-
-## Behavior and compatibility
-
-The 20-pixel QuestNormal atlas icon sits six pixels left of the standard health-bar area. Blizzard's nameplates and their state remain unchanged. Players and dead mobs are excluded when their flags can be read. Structured tooltip objective counters are parsed without English-only keywords. Completed counters no longer display an icon. Quest updates refresh visible plates; a half-second refresh handles delayed tooltip data and layout changes. Removed and recycled nameplates clear their old markers.
-
-Progress text uses a separate overlay six pixels right of the health-bar area, or the visible level badge, and reads localized counters from either tooltip text column. Multiple unfinished counters appear on separate lines; identical counters appear once. Completed counters disappear. Quest-item objectives show collected items rather than killed mobs. Progress updates together with the icon and is hidden when plates are reused. Missing or restricted counters leave the progress text hidden. Text creation or layout failures do not prevent the quest icon from appearing.
-
-Discovery also resolves nameplate1 through nameplate40 directly through C_NamePlate.GetNamePlateForUnit, so switching off/on does not depend solely on namePlateUnitToken fields being present on plate frames.
-
-C_QuestLog.UnitIsRelatedToActiveQuest provides the fallback when tooltip data is missing, lacks counters, or is restricted. Version 0.2.4 also accepts a readable unfinished tooltip objective on an NPC that UnitCanAttack confirms is attackable, even when the relation API returns false. This supports friendly or neutral attackable quest mobs without relying on their reaction or name. Missing, restricted or failed attackability checks do not override a false relation. Restricted booleans are passed directly to SetShown; if the client rejects that operation, the icon stays hidden. ShowMe does not guess quest mobs from names. In restricted situations, the relation API determines eligibility and objective-level completion may not be available.
-
-Custom nameplate addons may require anchor adjustments. Other quest-icon addons, such as ForeverQuestMark, can display additional icons independently; disable their icon feature if duplicate marks are unwanted.
-
-## Verification
-
-Version 0.2.4 passed the existing Lua 5.1 regression simulation plus false-relation attackable NPC cases: counters and updates, all off/on, completion, non-attackable and restricted/error flags, unavailable/restricted tooltip data, dead NPCs and removal. The user confirmed on October 11, 2026 that the fix works in game for friendly attackable quest mobs.
-
-Version 0.2.1 passed a Lua 5.1 simulation using a temporary Lupa runtime: defaults, commands, localized counters, completion, restricted-data fallbacks, polling, removal/recycling, world/combat events, missing plate tokens, repeated off/on, both tooltip columns, multiple counters, level-badge placement, and text-creation failure/recovery. The user confirmed on October 11, 2026 that the corrected progress display and off/on behavior work in game. Detailed compatibility checks remain pending; the mocks do not reproduce the client's rendering or secret-value enforcement.
-
-In-game check: enable the feature near an unfinished quest mob, confirm a yellow exclamation mark on the left and a counter such as 3/10 on the right, kill another mob and check the counter updates, compare an unrelated mob, finish the objective, test off/on and /reload, enter combat, and move away until plates disappear and are reused. Also test multiple objectives, quest-item objectives and the active nameplate addons.
+ShowMe works on its own and does not require any other addons.
